@@ -1,0 +1,7 @@
+selenium
+pandas
+numpy
+matplotlib
+scikit-learn
+nltk
+streamlit

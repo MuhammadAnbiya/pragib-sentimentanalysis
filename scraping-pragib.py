@@ -26,6 +26,8 @@ options = webdriver.ChromeOptions()
 options.add_argument(f"user-data-dir={chrome_profile_path}")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
+# options.add_argument("--headless")  # Tambahkan agar bisa berjalan tanpa GUI
+options.add_argument("--disable-gpu")
 
 try:
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
@@ -39,20 +41,23 @@ def search_google_news():
     try:
         driver.get("https://www.google.com/?hl=en")
         print("✅ Berhasil membuka Google.")
-        
+
         search_box = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "q")))
         search_box.send_keys("Prabowo Gibran kinerja 2024")
         search_box.send_keys(Keys.RETURN)
         print("✅ Berhasil memasukkan kata kunci.")
 
+        # Tunggu tombol News muncul dan klik
         news_tab = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//a[contains(@href,"tbm=nws")]')))
         news_tab.click()
         print("✅ Berhasil membuka tab News.")
-        
+
+        # Tunggu tombol Tools muncul dan klik
         tools_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//div[text()="Tools"]')))
         tools_button.click()
         print("✅ Berhasil membuka menu Tools.")
 
+        # Tunggu opsi Sort by Date muncul dan klik
         sort_span = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//div[@class="AozSsc"]//span')))
         sort_span.click()
         print("✅ Berhasil memilih 'Sort by Date'.")
@@ -67,7 +72,7 @@ def set_date_range(start, end):
     try:
         date_picker = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "gTl8xb")))
         date_picker.click()
-        
+
         custom_range = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//span[text()="Custom range..."]')))
         custom_range.click()
 
@@ -136,7 +141,7 @@ def save_to_csv(news_data, filename="prabowo-gibran.csv"):
 # Eksekusi Program
 search_google_news()
 
-start_date = datetime(2025, 3, 20)
+start_date = datetime(2024, 10, 20)
 end_date = datetime.today()
 date_ranges = generate_date_ranges(start_date, end_date)
 
